@@ -1,0 +1,54 @@
+{
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "compilerOptions": {
+    // 实验性选项
+    "experimentalDecorators": true, // 启用实验性的ES装饰器
+    "emitDecoratorMetadata": true, // 给源码里的装饰器声明加上设计类型元数据
+    "baseUrl": ".",
+    "outDir": "build",
+    "module": "esnext",
+    "target": "es6",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "sourceMap": true,
+    "allowJs": true,
+    "rootDir": "./",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "importHelpers": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      /**
+      * 处理webpack类型声明问题 
+      * @link https://www.thinbug.com/q/55263085
+      */
+      "webpack-env"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    }
+  },
+  "include": [
+    "src",
+    "typings/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "public"
+  ]
+}
