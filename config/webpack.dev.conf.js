@@ -1,13 +1,13 @@
 /*
  * @Date: 2021-09-27 20:52:18
- * @LastEditTime: 2021-09-28 01:00:08
+ * @LastEditTime: 2021-09-29 02:41:07
  * @Description: 开发环境配置
  */
 const path = require('path');
 const { merge } = require('webpack-merge');
 
 const WebpackBase = require('./webpack.base.conf');
-const { SERVER_HOST, SERVER_PORT } = require('../scripts/start');
+const DevOption = require('../scripts/start');
 
 module.exports = merge(WebpackBase, {
   mode: 'development',
@@ -26,8 +26,8 @@ module.exports = merge(WebpackBase, {
     level: 'warn', // string = 'info' : 'none' | 'error' | 'warn' | 'info' | 'log' | 'verbose'
   },
   devServer: {
-    host: SERVER_HOST,
-    port: SERVER_PORT,
+    host: DevOption.host ?? '8080',
+    port: DevOption.port ?? '127.0.0.1',
     client: {
       logging: 'none', // 'log' | 'info' | 'warn' | 'error' | 'none' | 'verbose'
       overlay: {
@@ -41,7 +41,7 @@ module.exports = merge(WebpackBase, {
     webSocketServer: 'ws', // 该配置项允许我们选择当前的 web-socket 服务器或者提供自定义的 web-socket 服务器实现。
     compress: true, // 启用 gzip compression
     // https://webpack.docschina.org/configuration/dev-server/#devserverproxy
-    // proxy: {}  ,
+    proxy: DevOption.proxy ?? {},
     open: false,
     hot: true,
   },
