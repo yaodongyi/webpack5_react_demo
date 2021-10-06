@@ -639,7 +639,7 @@ npm i @babel/preset-env @babel/plugin-transform-runtime -D
 npm i @babel/preset-typescript -D
 ```
 创建.babelrc，配置转译器转码规则和插件
-```json
+``` json
 {
     // presets 执行顺序（至下往上）
     "presets": [
