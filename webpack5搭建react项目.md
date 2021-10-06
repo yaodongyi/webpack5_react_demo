@@ -1,5 +1,6 @@
-# 从0~1搭建react开发脚手架（webpack5）
-> 背景：由于目前react脚手架还未提供webpack5版本，为了使用webpack5属性以提高项目效率，因此搭建`webpack+react`框架，集成开发所需功能。
+# 从0~1搭建react开发脚手架（webpack5）实现微应用架构方案
+> 背景：由于目前react脚手架还未提供webpack5版本，为了使用webpack5属性以提高项目效率，因此搭建`webpack+react`框架，集成开发所需功能。\
+> 至于为什么不用`iceJs/umiJs`，因为吧，一踩一个坑，[坑还特难填](https://github.com/alibaba/ice/issues/4709)，官方尚且无法填，何必模棱两可的使用～ 索性自己搭建得了.
 
 ## 第一步：不用多说直接新建文件夹，开始初始化项目结构
 ```vim
@@ -1223,6 +1224,9 @@ const WebpackBar = require('webpackbar');
 尽请期待...
 
 ## 项目结构化
+尽请期待...
+
+## 前端测试工具，单元测试等...
 尽请期待...
 
 ## more...
