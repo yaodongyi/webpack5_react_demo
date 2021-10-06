@@ -1,11 +1,11 @@
 /*
  * @Date: 2021-09-27 21:26:30
- * @LastEditTime: 2021-09-28 20:09:14
+ * @LastEditTime: 2021-10-05 20:12:17
  */
 declare namespace NodeJS {
   interface ProcessEnv {
-    readonly NODE_ENV: 'development' | 'production' | 'test';
-    readonly PUBLIC_URL: string;
+    // readonly NODE_ENV: 'development' | 'production' | 'test';
+    // readonly PUBLIC_URL: string;
   }
 }
 

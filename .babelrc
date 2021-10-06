@@ -6,7 +6,8 @@
             {
                 // 启用 ES 模块语法到另一种模块类型的转换
                 // "amd" | "umd" | "systemjs" | "commonjs" | "cjs" | "auto" | false，默认为"auto"
-                "modules": false
+                // "modules": false
+                "modules": "umd"
             }
         ],
         [

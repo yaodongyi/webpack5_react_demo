@@ -1,10 +1,10 @@
 /*
  * @Date: 2020-03-31 11:37:48
- * @LastEditTime: 2021-09-28 12:52:52
+ * @LastEditTime: 2021-10-06 15:08:27
  */
 module.exports = {
   // trailingComma: 'es5',
-  printWidth: 220, // 超过最大值换行
+  printWidth: 120, // 超过最大值换行
   tabWidth: 2, // 缩进字节数
   useTabs: false, // 缩进不使用tab，使用空格
   semi: true, // 句尾添加分号
