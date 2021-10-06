@@ -43,10 +43,10 @@ npm i webpack webpack-cli webpack-dev-server html-webpack-plugin -D
 ```
 `-D`代表`devDependencies`开发环境所需依赖
 
-> `webpack`： 模块打包器\
-> `webpack-cli`： 用于设置自定义webpack配置\
-> `webpack-dev-server`： 这个不用说了，不懂自行百度\
-> `html-webpack-plugin`： `html`转译`plugin`，打包`html`
+> [`webpack`](https://www.npmjs.com/package/webpack)： 模块打包器\
+> [`webpack-cli`](https://www.npmjs.com/package/webpack-cli)： 用于设置自定义webpack配置\
+> [`webpack-dev-server`](https://webpack.docschina.org/guides/development/)： 这个不用说了，不懂自行百度\
+> [`html-webpack-plugin`](https://webpack.docschina.org/plugins/html-webpack-plugin/#root)： `html`转译`plugin`，打包`html`
 
 接下来先新建项目启动的`html`入口文件(这又是一个默认指向)：
 ```vim
@@ -72,9 +72,9 @@ touch public/index.html
 touch src/index.js
 ```
 **这时候运行`npm run start`就可以启动项目了。当然这是基础版，刚刚完成第一步！！！**
-<div style="display:flex;width:600px;height:300px">
-    <img style="flex-shrink: 0;" src="https://staticqc-operating.lycheer.net/image/weike-fQMKMs-1249425007.png" />
-    <img style="flex-shrink: 0;" src="https://staticqc-operating.lycheer.net/image/weike-EZkRcb-327954411.png" />
+<div style="display:flex;">
+    <img style="max-height:300px;" src="https://staticqc-operating.lycheer.net/image/weike-fQMKMs-1249425007.png" />
+    <img style="max-height:300px;" src="https://staticqc-operating.lycheer.net/image/weike-EZkRcb-327954411.png" />
 </div>
 
 
@@ -269,7 +269,7 @@ module.exports = {
   ],
 };
 ```
-安装`webpack-merge`用于合并webpack配置
+安装[`webpack-merge`](https://github.com/survivejs/webpack-merge)用于合并webpack配置
 ```vim
 npm i webpack-merge -D
 ```
@@ -334,7 +334,7 @@ module.exports = merge(WebpackBase, {
 
 npm i style-loader css-loader less less-loader sass sass-loader mini-css-extract-plugin -D
 ```
-**单独说一下`mini-css-extract-plugin`：将 `CSS` 提取到单独的文件中“*基于 `webpack v5` 的新特性构建，并且需要 `webpack 5` 才能正常工作*”，其他的大家应该都知道。**
+**单独说一下[`mini-css-extract-plugin`](https://webpack.docschina.org/plugins/mini-css-extract-plugin/)：将 `CSS` 提取到单独的文件中“*基于 `webpack v5` 的新特性构建，并且需要 `webpack 5` 才能正常工作*”，其他的大家应该都知道。**
 
 此时就开始体现`base.conf`的作用了，起飞：
 ```javascript
@@ -464,9 +464,9 @@ import "./index_less.less"
 ```vim
 npm i @babel/core @babel/runtime-corejs3 babel-loader -D
 ```
->@babel/core：Babel编译器核心功能\
->@babel/runtime-corejs3: Babel模块polyfill“兜底操作” \
->babel-loader：顾名思义，用于转译js
+>[`@babel/core`](https://babeljs.io/docs/en/babel-core)：Babel编译器核心功能\
+>[`@babel/runtime-corejs3`](https://babeljs.io/docs/en/babel-plugin-transform-runtime#version): Babel模块polyfill“兜底操作” \
+>[`babel-loader`](https://www.npmjs.com/package/babel-loader)：顾名思义，用于转译js
 
 ```javascript
 // ./config/webpack.base.conf
@@ -784,7 +784,7 @@ module.exports = merge(WebpackBase, {
 > 那怎么办？\
 > A：压缩不就是*取其精华去其糟粕*，将撑大肚子的肉，分到该大的地方去，不就合理了？\
 > 🤔哦。。。\
-> A：ooo 哦半天都想不出来，`chunk` `chunk` `splitChunks`
+> A：ooo 哦半天都想不出来，`chunk` `chunk` [`splitChunks`](https://webpack.docschina.org/plugins/split-chunks-plugin/#optimizationsplitchunks)
 
 ```javascript
 // ./config/webpack.base.conf
@@ -841,7 +841,7 @@ module.exports = {
 ```vim
 npm i @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-plugin-import eslint-plugin-react eslint-plugin-react-hooks -D
 ```
-安装校验工具\
+[安装校验工具](https://www.npmjs.com/package/fork-ts-checker-webpack-plugin)\
 在单独的进程上运行 `TypeScript` 类型检查器的 `Webpack` 插件。
 ```
 npm i fork-ts-checker-webpack-plugin -D
@@ -1140,7 +1140,7 @@ declare module '*.module.css' {
 ## 七：进一步优化webpack
 ### 对于`react-cli`搭建的项目大家都不默生，在`react-cli`项目中可以看到带着`style`,`manifest.json`,等等这些文件如何导入html呢？我们接下来看看：
 
-利用`copy-webpack-plugin`插件
+[利用`copy-webpack-plugin`插件](https://webpack.docschina.org/plugins/copy-webpack-plugin/)
 
 `npm i copy-webpack-plugin -D`
 
@@ -1173,7 +1173,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 **可自行新建文件试验！**
 
 ### 优化控制台打印
-利用`webpackbar`工具，查看`start/build`相应的打包时长
+利用[`webpackbar`](https://www.npmjs.com/package/webpackbar)工具，查看`start/build`相应的打包时长
 
 ```javascript
 // ./config/webpack.base.conf
