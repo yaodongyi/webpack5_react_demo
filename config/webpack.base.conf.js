@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:07
- * @LastEditTime: 2021-10-09 12:57:38
+ * @LastEditTime: 2021-10-09 19:05:18
  * @Description: 抽离公共webpack。分别用于prod.conf/dev.conf
  */
 
@@ -84,22 +84,25 @@ module.exports = {
       chunks: ['app'],
     }),
     new webpack.DefinePlugin(env.stringified),
-    // https://www.npmjs.com/package/webpackbars
+    // https://www.npmjs.com/package/webpackbar
     // webpack进度条 + 编译回调
     new WebpackBar({
       name: 'youke_component_system\n',
       color: '#52c41a',
-      start(context) {
-        // Called when (re)compile is started
-      },
-      change(context) {
-        // Called when a file changed on watch mode
-      },
-      update(context) {
-        // Called after each progress update
-      },
-      done(context) {
-        // Called when compile finished
+      reporter: {
+        start(context) {
+          // Called when (re)compile is started
+        },
+        change(context) {
+          // Called when a file changed on watch mode
+        },
+        update(context) {
+          // Called after each progress update
+        },
+        done(context) {
+          // Called when compile finished
+          process.stdin.emit('done');
+        },
       },
     }),
     // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
