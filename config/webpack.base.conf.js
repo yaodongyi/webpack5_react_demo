@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:07
- * @LastEditTime: 2021-10-07 00:01:11
+ * @LastEditTime: 2021-10-09 12:57:38
  * @Description: 抽离公共webpack。分别用于prod.conf/dev.conf
  */
 
@@ -20,10 +20,7 @@ const package = require(paths.appPackageJson);
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
 
-console.log(process.env);
-
-const getClientEnvironment = require('./env');
-const env = getClientEnvironment();
+const env = require('./env');
 
 // style files regexes
 const cssRegex = /\.css$/;
@@ -57,6 +54,8 @@ const getStyleLoaders = ({ hashName }) => {
 
   return loaders;
 };
+
+// console.log(process.env);
 
 module.exports = {
   entry: {
@@ -143,7 +142,7 @@ module.exports = {
         './HeaderCmp': path.resolve(__dirname, '../src/components/Header/Header'), // 这个键名是拿到teamA.js后用o函数取的位置，因为远程调用是import(teamA/XXX)，切了路径所以是个路径
       },
       remotes: {
-        teamB: 'teamB@http://localhost:3001/teamB.js',
+        teamB: `teamB@${isEnvDevelopment ? process.env.ykr_coupon_proxy : process.env.ykr_coupon}/teamB.js`,
       },
     }),
   ],

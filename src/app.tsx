@@ -1,12 +1,12 @@
 /*
  * @Date: 2021-09-28 17:28:41
- * @LastEditTime: 2021-10-06 23:06:56
+ * @LastEditTime: 2021-10-09 11:30:54
  */
 
 import React, { useEffect, useState } from 'react';
 import HeaderCmp from './components/Header/Header';
-const FooterCmp = React.lazy(() => import('teamB/FooterCmp' as string));
-// const HeaderCmp = React.lazy(() => import('teamB/HeaderCmp' as string));
+import { Micro } from './routes';
+import { loadImport } from './utils';
 
 interface Istate {
   num: number;
@@ -22,8 +22,8 @@ const App = () => {
     <div>
       App1
       <HeaderCmp />
-      <React.Suspense fallback="loading">
-        <FooterCmp />
+      <React.Suspense fallback={<>加载中....</>}>
+        <Micro.FooterCmp />
       </React.Suspense>
     </div>
   );

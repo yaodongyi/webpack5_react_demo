@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-10-05 19:53:46
- * @LastEditTime: 2021-10-06 15:09:09
+ * @LastEditTime: 2021-10-09 16:04:45
  * @Description: 环境变量
  */
 
@@ -28,7 +28,8 @@ dotenvFiles.forEach(dotenvFile => {
   }
 });
 
-const YK_APP = /^yk_/i;
+const YK_APP = /^(yk|ykr)_/i;
+const PROXY_REG = /^(yk|ykr)_[\S*]+._proxy$/i;
 
 function getClientEnvironment() {
   const raw = Object.keys(process.env)
@@ -53,7 +54,38 @@ function getClientEnvironment() {
     }, {}),
   };
 
-  return { raw, stringified };
+  // 代理列表
+  const proxyList = Object.keys(process.env)
+    .filter(x => PROXY_REG.test(x))
+    .map(key => {
+      if (!process.env[process.env[key]]) {
+        const str = `error: 环境变量输出错误 \n process.env.${key} 所对应的环境变量 "process.env.${process.env[key]}" 未定义`;
+        throw console.log(
+          '[proxyList ~ env.js]',
+          '\033[91m',
+          '\n-------------------------------------------------------------------------------\n\n',
+          str.replace(/(.{68})/g, '$1 \n '),
+          /(.{67})/g.test(str) ? '\n' : '',
+          '\n-------------------------------------------------------------------------------',
+          '\033[39m',
+        );
+      }
+      return {
+        [`/${process.env[key]}`]: {
+          target: process.env[process.env[key]], // 目标接口域名
+          changOrigin: true, // 将主机标头的原点更改为目标URL,解决跨域
+          ws: true, // proxy websockets
+          secure: false, // 设置支持https协议的代理,不检查安全问题
+          pathRewrite: {
+            [`^/${process.env[key]}`]: '/', // 重写
+          },
+        },
+      };
+    });
+
+  console.log(proxyList);
+
+  return { raw, stringified, proxyList };
 }
 
-module.exports = getClientEnvironment;
+module.exports = getClientEnvironment();

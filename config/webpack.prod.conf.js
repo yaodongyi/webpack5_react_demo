@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:30
- * @LastEditTime: 2021-10-06 21:27:18
+ * @LastEditTime: 2021-10-09 12:09:45
  * @Description: 生产环境配置
  */
 const path = require('path');
@@ -30,7 +30,7 @@ module.exports = merge(WebpackBase, {
   ],
   optimization: {
     // 这将只在生产模式下启用 CSS 压缩优化。如果你需要在开发模式下使用，请设置 optimization.minimize 选项为 true。
-    // minimize: true,
+    minimize: true,
     minimizer: [
       // https://webpack.docschina.org/plugins/mini-css-extract-plugin/#minimizing-for-production
       new CssMinimizerPlugin(),
