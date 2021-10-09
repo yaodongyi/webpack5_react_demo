@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:07
- * @LastEditTime: 2021-10-09 19:05:18
+ * @LastEditTime: 2021-10-09 19:53:40
  * @Description: 抽离公共webpack。分别用于prod.conf/dev.conf
  */
 
@@ -12,6 +12,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const env = require('./env');
+const mf = require('./mf');
 
 const { ModuleFederationPlugin } = require('webpack').container;
 
@@ -19,8 +21,6 @@ const package = require(paths.appPackageJson);
 
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
-
-const env = require('./env');
 
 // style files regexes
 const cssRegex = /\.css$/;
@@ -138,16 +138,7 @@ module.exports = {
     // 模块联邦
     // TODO: 热更bug webpack暂未解决 --> https://github.com/module-federation/module-federation-examples/issues/358
     // working on it, its extremely complex. We will eventually roll support for it into webpack 5 but its a monster to achieve
-    new ModuleFederationPlugin({
-      name: 'teamA',
-      filename: 'teamA.js',
-      exposes: {
-        './HeaderCmp': path.resolve(__dirname, '../src/components/Header/Header'), // 这个键名是拿到teamA.js后用o函数取的位置，因为远程调用是import(teamA/XXX)，切了路径所以是个路径
-      },
-      remotes: {
-        teamB: `teamB@${isEnvDevelopment ? process.env.ykr_coupon_proxy : process.env.ykr_coupon}/teamB.js`,
-      },
-    }),
+    new ModuleFederationPlugin(mf),
   ],
   module: {
     rules: [

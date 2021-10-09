@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-10-05 19:53:46
- * @LastEditTime: 2021-10-09 17:17:23
+ * @LastEditTime: 2021-10-09 19:21:03
  * @Description: 环境变量
  */
 
@@ -82,8 +82,6 @@ function getClientEnvironment() {
         },
       };
     });
-
-  console.log(proxyList);
 
   return { raw, stringified, proxyList };
 }

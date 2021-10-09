@@ -1208,6 +1208,9 @@ const WebpackBar = require('webpackbar');
 <img src="https://staticqc-operating.lycheer.net/image/weike-SCZGEb-1058766354.png" />
 
 
+## 八：代理环境变量规范配置。
+TODO: 通过代理列表+dotenv配置+devServer 实现通过环境变量注入代理配置。（后续写详细解析）
+
 ## 升级环境变量配置
 尽请期待...
 

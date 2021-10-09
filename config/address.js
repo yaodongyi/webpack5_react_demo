@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-10-09 17:43:53
- * @LastEditTime: 2021-10-09 19:14:09
+ * @LastEditTime: 2021-10-09 19:38:04
  * @Description: devServer 检查host/port，生成输出地址
  */
 let os = require('os'); // 提供基本的系统操作函数
@@ -32,10 +32,16 @@ const getAddress = config => {
       return localIPAddress;
     };
 
-    /** 清除日志 */
+    /**
+     * 清除日志
+     * @description 默认清空日志，如果需要保留，则采用
+     * ```js
+     * readline.cursorTo(process.stdout, 0, 0);
+     * readline.clearScreenDown(process.stdout);
+     * ```
+     */
     const clearConsole = () => {
-      readline.cursorTo(process.stdout, 0, 0);
-      readline.clearScreenDown(process.stdout);
+      process.stdout.write(process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H');
     };
 
     /**
