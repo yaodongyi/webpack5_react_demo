@@ -1,11 +1,10 @@
 /*
  * @Date: 2021-10-09 17:43:53
- * @LastEditTime: 2021-10-09 19:38:04
+ * @LastEditTime: 2021-10-11 10:35:35
  * @Description: devServer 检查host/port，生成输出地址
  */
 let os = require('os'); // 提供基本的系统操作函数
 let portfinder = require('portfinder'); // 端口查询器
-const readline = require('readline'); // 读取数据接口
 
 const getAddress = config => {
   return new Promise((resolve, reject) => {
@@ -36,11 +35,17 @@ const getAddress = config => {
      * 清除日志
      * @description 默认清空日志，如果需要保留，则采用
      * ```js
+     * const readline = require('readline'); // 读取数据接口
      * readline.cursorTo(process.stdout, 0, 0);
      * readline.clearScreenDown(process.stdout);
      * ```
      */
     const clearConsole = () => {
+      //   let lines = process.stdout.getWindowSize()[1];
+      //   for (let i = 0; i < lines; i++) {
+      //     console.log('\r');
+      //   }
+      //   process.stdout.write('\x1B[0f'); // window \033[0f
       process.stdout.write(process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H');
     };
 

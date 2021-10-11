@@ -1,12 +1,11 @@
 /*
  * @Date: 2021-09-28 17:28:41
- * @LastEditTime: 2021-10-09 11:30:54
+ * @LastEditTime: 2021-10-11 10:36:10
  */
 
 import React, { useEffect, useState } from 'react';
 import HeaderCmp from './components/Header/Header';
 import { Micro } from './routes';
-import { loadImport } from './utils';
 
 interface Istate {
   num: number;
