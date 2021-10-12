@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:07
- * @LastEditTime: 2021-09-28 23:11:31
+ * @LastEditTime: 2021-10-12 19:09:11
  * @Description: 抽离公共webpack。分别用于prod.conf/dev.conf
  */
 
@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 let { CleanWebpackPlugin } = require('clean-webpack-plugin'); /* 删除dist */
+const { ModuleFederationPlugin } = require('webpack').container;
 
 const fs = require('fs');
 const appDirectory = fs.realpathSync(process.cwd());
@@ -19,6 +20,7 @@ const package = require(resolveApp('package.json'));
 
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
+const microUrl = isEnvDevelopment ? 'micro_3000' : 'http://localhost:3000';
 
 console.log(process.env.NODE_ENV);
 
@@ -59,6 +61,10 @@ module.exports = {
   entry: {
     app: path.resolve(__dirname, '../src/index.tsx'),
   },
+  output: {
+    // crossOriginLoading: 'anonymous',
+    // chunkLoading: 'jsonp',
+  },
   resolve: {
     // 添加extensions，可以对扩展后缀进行省略。
     extensions: ['.tsx', '.ts', '.js', '.jsx', '.json'],
@@ -92,17 +98,17 @@ module.exports = {
     }),
     // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
     // 运行 TypeScript 类型检查器
-    new ForkTsCheckerWebpackPlugin({
-      // 添加支持eslint检测，控制台错误告警
-      eslint: {
-        // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-        files: './src/**.{ts,tsx,js,jsx}',
-      },
-      typescript: {
-        // 指定文件
-        configFile: path.resolve(__dirname, '../tsconfig.json'),
-      },
-    }),
+    // new ForkTsCheckerWebpackPlugin({
+    //   // 添加支持eslint检测，控制台错误告警
+    //   eslint: {
+    //     // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+    //     files: './src/**.{ts,tsx,js,jsx}',
+    //   },
+    //   typescript: {
+    //     // 指定文件
+    //     configFile: path.resolve(__dirname, '../tsconfig.json'),
+    //   },
+    // }),
     // https://webpack.js.org/plugins/copy-webpack-plugin/
     // 将已存在的单个文件或整个目录复制到构建目录。
     new CopyPlugin({
@@ -120,6 +126,34 @@ module.exports = {
         },
       ],
     }),
+    new ModuleFederationPlugin({
+      filename: 'teamB.js',
+      name: 'teamB',
+      remotes: {
+        teamA: `teamA@${microUrl}/teamA.js`,
+      },
+      shared: {
+        react: {
+          eager: true,
+          import: 'react',
+          version: '17.0.2',
+          requiredVersion: '17.0.2',
+          singleton: true,
+        },
+      },
+      exposes: {
+        './HeaderCmp': path.resolve(__dirname, '../src/components/header/header'),
+        './FooterCmp': path.resolve(__dirname, '../src/components/footer/footer'), // 这个键名是拿到teamA.js后用o函数取的位置，因为远程调用是import(teamA/XXX)，切了路径所以是个路径
+      },
+    }),
+    // new ModuleFederationPlugin({
+    //   filename: 'teamB.js',
+    //   name: 'app3',
+    //   remotes: {
+    //     teamA: `teamA@http://localhost:3000/teamA.js`,
+    //   },
+    //   // shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
+    // }),
   ],
   module: {
     rules: [
@@ -194,33 +228,32 @@ module.exports = {
     // https://webpack.docschina.org/plugins/split-chunks-plugin/
     // 分包
     splitChunks: {
-      chunks: 'all',
       minSize: 30000,
       minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
+      chunks: 'async',
+      minRemainingSize: 0,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      enforceSizeThreshold: 50000,
       // 抽离固定模块
       // 注意：cacheGroups 执行方式为右到左，下到上(loader，presets都一样)，因此剥离剩余的node_modules放在最后打包。
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          chunks: 'all',
-          filename: `vendor.${package.name}.v${package.version}.bundle.js`,
+          chunks: 'async',
+          // name: `vendor.${package.name}.v${package.version}.bundle`,
         },
         react: {
           test: /node_modules[\\/]react/,
-          chunks: 'all',
+          chunks: 'async',
           priority: 2,
-          filename: `framework.${package.name}.v${package.version}.bundle.js`,
+          // name: `framework.${package.name}.v${package.version}.bundle`,
         },
       },
     },
-    // https://webpack.docschina.org/configuration/optimization/#optimizationruntimechunk
-    // 分离运行时文件
-    runtimeChunk: {
-      name: entrypoint => `runtime~${entrypoint.name}`,
-    },
+  },
+  experiments: {
+    topLevelAwait: true,
   },
 };
 

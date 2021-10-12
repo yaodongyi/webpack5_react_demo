@@ -1,7 +1,10 @@
 /*
  * @Date: 2021-09-27 21:26:30
- * @LastEditTime: 2021-09-28 20:09:14
+ * @LastEditTime: 2021-10-01 21:10:42
  */
+
+/// <reference path="../src/tools/micro/micro.d.ts" />
+
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly NODE_ENV: 'development' | 'production' | 'test';
