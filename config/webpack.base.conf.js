@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:07
- * @LastEditTime: 2021-10-12 19:09:11
+ * @LastEditTime: 2021-10-13 11:19:09
  * @Description: 抽离公共webpack。分别用于prod.conf/dev.conf
  */
 
@@ -146,14 +146,6 @@ module.exports = {
         './FooterCmp': path.resolve(__dirname, '../src/components/footer/footer'), // 这个键名是拿到teamA.js后用o函数取的位置，因为远程调用是import(teamA/XXX)，切了路径所以是个路径
       },
     }),
-    // new ModuleFederationPlugin({
-    //   filename: 'teamB.js',
-    //   name: 'app3',
-    //   remotes: {
-    //     teamA: `teamA@http://localhost:3000/teamA.js`,
-    //   },
-    //   // shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
-    // }),
   ],
   module: {
     rules: [
