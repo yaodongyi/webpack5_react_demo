@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 21:35:22
- * @LastEditTime: 2021-09-27 21:37:03
+ * @LastEditTime: 2021-10-06 23:07:29
  */
 module.exports = {
   root: true,
@@ -30,7 +30,8 @@ module.exports = {
     },
   },
   // ---------
-  extends: ['plugin:import/react'],
+  plugins: ['react', '@typescript-eslint', 'react-hooks'],
+  extends: ['plugin:import/react', 'plugin:react-hooks/recommended'],
   rules: {
     // eslint文档 https://eslint.bootcss.com/docs/rules/
     // 关闭console告警
@@ -91,5 +92,9 @@ module.exports = {
     // 返回值没必要，比如生命周期就没必要加void
     '@typescript-eslint/explicit-function-return-type': ['off'],
     '@typescript-eslint/camelcase': ['off'],
+    // react ---------
+    'react-hooks/rules-of-hooks': 'error', // 检查 Hook 的规则
+    'no-extra-boolean-cast': 'off',
+    'react-hooks/exhaustive-deps': 'off', // 检查 hook 的依赖
   },
 };

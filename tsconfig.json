@@ -7,8 +7,8 @@
     "emitDecoratorMetadata": true, // 给源码里的装饰器声明加上设计类型元数据
     "baseUrl": ".",
     "outDir": "build",
-    "module": "esnext",
-    "target": "es6",
+    "module": "ESNext",
+    "target": "ESNext",
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,

@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:18
- * @LastEditTime: 2021-09-29 02:41:07
+ * @LastEditTime: 2021-10-09 16:02:01
  * @Description: 开发环境配置
  */
 const path = require('path');
@@ -26,8 +26,8 @@ module.exports = merge(WebpackBase, {
     level: 'warn', // string = 'info' : 'none' | 'error' | 'warn' | 'info' | 'log' | 'verbose'
   },
   devServer: {
-    host: DevOption.host ?? '8080',
-    port: DevOption.port ?? '127.0.0.1',
+    host: DevOption.host ?? '127.0.0.1',
+    port: DevOption.port ?? '8080',
     client: {
       logging: 'none', // 'log' | 'info' | 'warn' | 'error' | 'none' | 'verbose'
       overlay: {
@@ -35,17 +35,31 @@ module.exports = merge(WebpackBase, {
         warnings: false,
       }, // 当出现编译错误或警告时，在浏览器中显示全屏覆盖。
       progress: true, // 构建进度
+      //
+      // ws，sockjs区别：
+      // sockjs：
+      // SockJS 是一个 JavaScript 库（用于浏览器），它提供了一个类似 WebSocket 的对象。
+      // SockJS 为您提供了一个连贯的、跨浏览器的 Javascript API，它在浏览器和 Web 服务器之间创建了一个低延迟、全双工、跨域的通信通道，无论是否使用 WebSockets。
+      // 这需要使用服务器，这是 Node.js 的一个版本。
+      // ws：
+      // 就是封装了一个WebSocket，客户端与服务端通信。
+      //
+      // https://github.com/sockjs/sockjs-node
+      // https://github.com/websockets/ws
       webSocketTransport: 'ws', // 'ws' | 'sockjs'
     },
     // https://webpack.docschina.org/configuration/dev-server/#devserverwebsocketserver
-    webSocketServer: 'ws', // 该配置项允许我们选择当前的 web-socket 服务器或者提供自定义的 web-socket 服务器实现。
+    webSocketServer: 'ws',
     compress: true, // 启用 gzip compression
     // https://webpack.docschina.org/configuration/dev-server/#devserverproxy
     proxy: DevOption.proxy ?? {},
     open: false,
-    hot: true,
+    // 热更bug webpack暂未解决，暂时使用liveReload
+    liveReload: true,
+    hot: false,
   },
+
   plugins: [
-    // new webpack.HotModuleReplacementPlugin()
+    // new webpack.HotModuleReplacementPlugin() // webpack5默认集成
   ],
 });

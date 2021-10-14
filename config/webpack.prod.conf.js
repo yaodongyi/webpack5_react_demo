@@ -1,6 +1,6 @@
 /*
  * @Date: 2021-09-27 20:52:30
- * @LastEditTime: 2021-09-28 21:07:32
+ * @LastEditTime: 2021-10-09 12:09:45
  * @Description: 生产环境配置
  */
 const path = require('path');
@@ -17,6 +17,10 @@ module.exports = merge(WebpackBase, {
   output: {
     filename: 'static/js/[name].[contenthash:8].js',
     path: path.resolve(__dirname, '../build'),
+    clean: true, // 以前使用clean-webpack-plugin，现在直接设置clean就可以了
+    // 告诉 webpack 启用 cross-origin 属性 加载 chunk。
+    // 仅在 target 设置为 'web' 时生效，通过使用 JSONP 来添加脚本标签，实现按需加载模块。
+    crossOriginLoading: 'anonymous',
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -26,7 +30,7 @@ module.exports = merge(WebpackBase, {
   ],
   optimization: {
     // 这将只在生产模式下启用 CSS 压缩优化。如果你需要在开发模式下使用，请设置 optimization.minimize 选项为 true。
-    // minimize: true,
+    minimize: true,
     minimizer: [
       // https://webpack.docschina.org/plugins/mini-css-extract-plugin/#minimizing-for-production
       new CssMinimizerPlugin(),

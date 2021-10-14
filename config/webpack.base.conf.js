@@ -1,26 +1,26 @@
 /*
  * @Date: 2021-09-27 20:52:07
- * @LastEditTime: 2021-09-29 02:39:34
+ * @LastEditTime: 2021-10-09 12:57:38
  * @Description: 抽离公共webpack。分别用于prod.conf/dev.conf
  */
 
 const path = require('path');
+const paths = require('./paths');
+const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-let { CleanWebpackPlugin } = require('clean-webpack-plugin'); /* 删除dist */
 
-const fs = require('fs');
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
-const package = require(resolveApp('package.json'));
+const { ModuleFederationPlugin } = require('webpack').container;
+
+const package = require(paths.appPackageJson);
 
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
 
-console.log(process.env.NODE_ENV);
+const env = require('./env');
 
 // style files regexes
 const cssRegex = /\.css$/;
@@ -31,7 +31,7 @@ const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const getStyleLoaders = ({ hashName }) => {
-  const cssLoaders = [
+  const loaders = [
     isEnvDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
     {
       loader: 'css-loader',
@@ -52,12 +52,23 @@ const getStyleLoaders = ({ hashName }) => {
     },
   ];
 
-  return cssLoaders;
+  return loaders;
 };
+
+// console.log(process.env);
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, '../src/index.tsx'),
+    app: path.resolve(__dirname, '../src/index'),
+  },
+  // https://webpack.docschina.org/configuration/output/
+  // w5将这个output集成了很多神气的东西，了解之后会发现很多新大陆
+  output: {
+    // publicPath: '/',
+    // publicPath: 'auto',
+  },
+  experiments: {
+    topLevelAwait: true, // 试验性质顶级作用域允许await, 目前这个版本好像无效
   },
   resolve: {
     // 添加extensions，可以对扩展后缀进行省略。
@@ -67,11 +78,12 @@ module.exports = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin(),
     // https://www.npmjs.com/package/html-webpack-plugin
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
+      chunks: ['app'],
     }),
+    new webpack.DefinePlugin(env.stringified),
     // https://www.npmjs.com/package/webpackbars
     // webpack进度条 + 编译回调
     new WebpackBar({
@@ -119,6 +131,19 @@ module.exports = {
           },
         },
       ],
+    }),
+    // 模块联邦
+    // TODO: 热更bug webpack暂未解决 --> https://github.com/module-federation/module-federation-examples/issues/358
+    // working on it, its extremely complex. We will eventually roll support for it into webpack 5 but its a monster to achieve
+    new ModuleFederationPlugin({
+      name: 'teamA',
+      filename: 'teamA.js',
+      exposes: {
+        './HeaderCmp': path.resolve(__dirname, '../src/components/Header/Header'), // 这个键名是拿到teamA.js后用o函数取的位置，因为远程调用是import(teamA/XXX)，切了路径所以是个路径
+      },
+      remotes: {
+        teamB: `teamB@${isEnvDevelopment ? process.env.ykr_coupon_proxy : process.env.ykr_coupon}/teamB.js`,
+      },
     }),
   ],
   module: {
@@ -191,35 +216,35 @@ module.exports = {
     ],
   },
   optimization: {
+    //
+    // 后续可以考虑加入代码分析，对重复的代码进行抽离共享
+    // https://webpack.docschina.org/guides/code-splitting/#bundle-analysis
+    //
     // https://webpack.docschina.org/plugins/split-chunks-plugin/
     // 分包
     splitChunks: {
-      chunks: 'all',
       minSize: 30000,
       minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
+      chunks: 'async',
+      minRemainingSize: 0,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      enforceSizeThreshold: 50000,
       // 抽离固定模块
       // 注意：cacheGroups 执行方式为右到左，下到上(loader，presets都一样)，因此剥离剩余的node_modules放在最后打包。
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          chunks: 'all',
-          filename: `vendor.${package.name}.v${package.version}.bundle.js`,
+          chunks: 'async',
+          name: `vendor.${package.name}.v${package.version}.bundle.js`,
         },
         react: {
           test: /node_modules[\\/]react/,
           chunks: 'all',
           priority: 2,
-          filename: `framework.${package.name}.v${package.version}.bundle.js`,
+          name: `framework.${package.name}.v${package.version}.bundle.js`,
         },
       },
-    },
-    // https://webpack.docschina.org/configuration/optimization/#optimizationruntimechunk
-    // 分离运行时文件
-    runtimeChunk: {
-      name: entrypoint => `runtime~${entrypoint.name}`,
     },
   },
 };
